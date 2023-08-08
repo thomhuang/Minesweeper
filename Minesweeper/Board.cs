@@ -82,23 +82,28 @@ namespace Minesweeper
             return board[r, c].type == Bomb ? 1 : 0;
         }
 
+        // BFS flood fill for selected cells
         public void revealCell(int r, int c)
         {
             Queue<Point> queue = new Queue<Point>();
             HashSet<Point> visited = new HashSet<Point>();
 
+            // Create initial point and add to visited & queue
             Point initialPoint = new Point(r, c);
             queue.Enqueue(initialPoint);
             visited.Add(initialPoint);
 
             while (queue.Count > 0)
             {
+                // Pop current point and set to shown
                 Point currPoint = queue.Dequeue();
                 board[currPoint.X, currPoint.Y].type = Shown;
+                // Loop through all 8 adjacent points
                 for (int i = currPoint.X - 1; i <= currPoint.X + 1; i++)
                 {
                     for (int j = currPoint.Y - 1; j <= currPoint.Y + 1; j++)
                     {
+                        // if points are in bounds and point is valid to be revealed, add to queue/set.
                         if (i >= 0 && i < _rows &&
                             j >= 0 && j < _columns)
                         {
