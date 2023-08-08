@@ -1,4 +1,7 @@
-﻿using static Minesweeper.Utility;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using static Minesweeper.Utility;
 namespace Minesweeper
 {
     public class Board
@@ -15,7 +18,7 @@ namespace Minesweeper
             _bombs = bombs;
 
             board = new Cell[rows, columns];
-            // Make default mine properties
+            // Make default cell properties
             for (int r = 0; r < rows; r++)
             {
                 for (int c = 0; c < columns; c++)
@@ -40,7 +43,7 @@ namespace Minesweeper
                 int randomCol = random.Next(0, _columns);
 
                 // If chosen tuple has already been chosen as a bomb, restart process
-                if (board[randomRow, randomCol].display == "*")
+                if (board[randomRow, randomCol].type == Bomb)
                 {
                     continue;
                 }
@@ -48,7 +51,6 @@ namespace Minesweeper
                 else
                 {
                     board[randomRow, randomCol].type = Bomb;
-                    board[randomRow, randomCol].display = BombChar;
                     bombCount += 1;
                 }
             }
@@ -80,9 +82,41 @@ namespace Minesweeper
             return board[r, c].type == Bomb ? 1 : 0;
         }
 
+        public void revealCell(int r, int c)
+        {
+            Queue<Point> queue = new Queue<Point>();
+            HashSet<Point> visited = new HashSet<Point>();
+
+            Point initialPoint = new Point(r, c);
+            queue.Enqueue(initialPoint);
+            visited.Add(initialPoint);
+
+            while (queue.Count > 0)
+            {
+                Point currPoint = queue.Dequeue();
+                board[currPoint.X, currPoint.Y].type = Shown;
+                for (int i = currPoint.X - 1; i <= currPoint.X + 1; i++)
+                {
+                    for (int j = currPoint.Y - 1; j <= currPoint.Y + 1; j++)
+                    {
+                        if (i >= 0 && i < _rows &&
+                            j >= 0 && j < _columns)
+                        {
+                            Point pointToAdd = new Point(i, j);
+                            if (board[i, j].mineCount == 0 && !visited.Contains(pointToAdd))
+                            {
+                                queue.Enqueue(pointToAdd);
+                                visited.Add(pointToAdd);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void printBoard()
         {
-            Console.Write("\t");
+            Console.Write("\n\t");
             // index the columns
             for (int i = 1; i < _columns + 1; i++)
             {
@@ -95,12 +129,12 @@ namespace Minesweeper
                 Console.Write((i + 1) + "\t");
                 for (int j = 0; j < _columns; j++)
                 {
-                    // If cell isn't a mine, show mine count
-                    if (board[i, j].type != Bomb)
+                    // If cell isn't a mine and isn't hidden, show mine count
+                    if (board[i, j].type == Shown)
                     {
                         Console.Write(board[i, j].mineCount + " ");
                     }
-                    // Otherwise display mine
+                    // Otherwise display other
                     else
                     {
                         Console.Write(board[i, j] + " ");
@@ -108,6 +142,37 @@ namespace Minesweeper
                 }
                 Console.WriteLine();
             }
+        }
+
+        public void printRevealedBoard()
+        {
+            Console.Write("\n\t");
+            // index the columns
+            for (int i = 1; i < _columns + 1; i++)
+            {
+                Console.Write(i + " ");
+            }
+            Console.WriteLine("\n");
+            for (int i = 0; i < _rows; i++)
+            {
+                // index the rows
+                Console.Write((i + 1) + "\t");
+                for (int j = 0; j < _columns; j++)
+                {
+                    // If cell isn't a mine and isn't hidden, show mine count
+                    if (board[i, j].type != Bomb)
+                    {
+                        Console.Write(board[i, j].mineCount + " ");
+                    }
+                    // Otherwise display other
+                    else
+                    {
+                        Console.Write(BombChar + " ");
+                    }
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
         }
     }
 }
