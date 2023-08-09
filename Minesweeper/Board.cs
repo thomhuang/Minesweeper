@@ -17,7 +17,7 @@ namespace Minesweeper
         private readonly int _rowMax;
         private readonly int _colMax;
         private readonly int _mines;
-        public Cell[,] board;
+        private Cell[,] board;
 
         public Board(int rows, int columns, int mines)
         {
@@ -76,7 +76,7 @@ namespace Minesweeper
             }
         }
 
-        public void countNeighboringMines(int r, int c)
+        private void countNeighboringMines(int r, int c)
         {
             // Loop through all surrounding cells, if there's a mine surrounding increase mine count
             int[] deltaX = new int[] { 0, 0, 1, 1, -1, -1, 1, -1 };
@@ -240,6 +240,7 @@ namespace Minesweeper
                         ? $"{board[i, j].mineCount} "
                         : $"{board[i, j]} ";
                     // If indices are 2 integers, increase spacing, we only allow for row/columns up to 99.
+                    if (j > 9)
                     {
                         res += " ";
 

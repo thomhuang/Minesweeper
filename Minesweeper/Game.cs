@@ -12,7 +12,7 @@
             newGame();
         }
 
-        public void newGame()
+        private void newGame()
         {
             int userRows, userColumns, userMines;
             Console.Write("How many rows would you like? ");
@@ -45,12 +45,12 @@
             board.printBoard();
         }
 
-        public void setFlag(int r, int c)
+        private void setFlag(int r, int c)
         {
             board.setType(r, c, Constants.FLAG);
         }
 
-        public void setMine(int r, int c)
+        private void setMine(int r, int c)
         {
             board.setType(r, c, Constants.MINE);
         }
