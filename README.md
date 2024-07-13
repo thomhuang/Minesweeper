@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 # Minesweeper
 
 This is a project that I created to become more familiar in C# during my onboarding with Costar Group.
@@ -24,4 +23,3 @@ It's just Minesweeper that's playable in terminal, with features that allows:
 - user to reset game
 - user to show hidden/revealed board
 - user to quit
->>>>>>> Stashed changes
